@@ -1,0 +1,130 @@
+﻿schema {    
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+"Represents any SW or service with a command line"
+type Platform {
+  "This is the list of available commands for the specified platform"
+  commands: [Command]
+  id: Int!
+  name: String!
+}
+
+"Represents any executable command"
+type Command {
+  "This is the platform for the command"
+  platform: Platform
+  id: Int!
+  howTo: String!
+  commandLine: String!
+  platformId: Int!
+}
+
+type Query {
+  platform(where: PlatformFilterInput order: [PlatformSortInput!]): [Platform]
+  command(where: CommandFilterInput order: [CommandSortInput!]): [Command]
+}
+
+type Mutation {
+  addPlatform(input: AddPlatformInput): AddPlatformPayload
+  addCommand(input: AddCommandInput): AddCommandPayload
+}
+
+type Subscription {
+  onPlatformAdded: Platform
+}
+
+input PlatformFilterInput {
+  and: [PlatformFilterInput!]
+  or: [PlatformFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  licenseKey: StringOperationFilterInput
+  commands: ListFilterInputTypeOfCommandFilterInput
+}
+
+input PlatformSortInput {
+  id: SortEnumType
+  name: SortEnumType
+  licenseKey: SortEnumType
+}
+
+input CommandFilterInput {
+  and: [CommandFilterInput!]
+  or: [CommandFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  howTo: StringOperationFilterInput
+  commandLine: StringOperationFilterInput
+  platformId: ComparableInt32OperationFilterInput
+  platform: PlatformFilterInput
+}
+
+input CommandSortInput {
+  id: SortEnumType
+  howTo: SortEnumType
+  commandLine: SortEnumType
+  platformId: SortEnumType
+  platform: PlatformSortInput
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input ListFilterInputTypeOfCommandFilterInput {
+  all: CommandFilterInput
+  none: CommandFilterInput
+  some: CommandFilterInput
+  any: Boolean
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+input AddPlatformInput {
+  name: String
+}
+
+type AddCommandPayload {
+  command: Command
+}
+
+type AddPlatformPayload {
+  platform: Platform
+}
+
+input AddCommandInput {
+  howTo: String
+  commandLine: String
+  platformId: Int!
+}

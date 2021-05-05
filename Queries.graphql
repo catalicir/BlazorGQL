@@ -1,0 +1,6 @@
+query GetPlatforms{
+  platform (order: {name: ASC}) {
+    id
+    name
+  }
+} 
